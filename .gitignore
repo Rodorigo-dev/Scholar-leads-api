@@ -1,0 +1,9 @@
+# Ambiente virtual
+crewapi/
+venv/
+
+# Variáveis de ambiente
+.env
+
+# Arquivos de dados
+scholar-leads/data/*

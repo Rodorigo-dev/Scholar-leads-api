@@ -1,0 +1,75 @@
+task_analise_scholar:
+  description: > 
+    Analyze the Google Scholar profile at URL {perfil_url}. 
+    Collect the following information:
+    - Main research area of the author
+    - Title, URL and abstract (when available) of up to 5 relevant articles
+    - Total number of citations
+    - All available coauthors with their name, profile URL, institution, and email domain (when available)
+  expected_output: > 
+    A structured JSON with EXACTLY the following fields, using exactly these key names:
+    {
+    "name": "Albert Einstein",
+    "profile_url": "https://scholar.google.com/citations?hl=pt-BR&user=ABCDE",
+    "research_area": "Physics",
+    "total_citations": 12000,
+    "articles": [
+      {"title": "Relativity", "url": "https://link_para_o_artigo", "abstract": "This paper presents the theory of special relativity..."}
+    ],
+    "coauthors": [
+      {
+        "name": "Niels Bohr",
+        "profile_url": "https://scholar.google.com/citations?user=FGHIJ",
+        "institution": "Copenhagen University",
+        "email_domain": "copenhagen.edu"
+      },
+      ... (all coauthors)
+    ]
+    }
+    DO NOT translate the field names. Use exactly these JSON keys: name, profile_url, research_area, total_citations, articles, coauthors, title, url, abstract, institution, email_domain.
+    IMPORTANT: Your final answer must be the exact JSON output from the tool. DO NOT modify key names or change the structure.
+  agent: analista_scholar
+
+task_busca_perfil:
+  description: >
+    Search for the profile of the researcher '{researcher_name}' on Google Scholar using the provided information.
+    Additional information may include email domain and institution which will be concatenated to the search query to improve accuracy.
+    
+    Pesquisador: '{researcher_name}'
+    Email: '{email}'
+    Instituição: '{institution}'
+  expected_output: >
+    The URL of the researcher's Google Scholar profile. If multiple profiles are found, list them one per line.
+  agent: buscador_scholar
+
+task_analisa_artigos:
+  description: >
+    Analisa os artigos do pesquisador para determinar se sua pesquisa está relacionada ao campo da pesquisa qualitativa.
+    Você receberá um JSON contendo os dados do perfil do pesquisador, incluindo artigos para análise.
+    O analisador irá:
+    - Examinar os artigos disponíveis no perfil
+    - Buscar por indicadores de metodologia qualitativa
+    - Determinar se o pesquisador trabalha com pesquisa qualitativa
+    - Fornecer uma análise detalhada e fundamentada
+    - Buscar e adicionar links para os artigos completos quando disponíveis
+    - Adicionar os resultados da análise ao JSON original do perfil, sem perder nenhuma informação
+  expected_output: >
+    O JSON original do perfil com os seguintes campos adicionados:
+    {
+      "articles": [
+        {
+          "title": "Título do artigo",
+          "url": "URL do artigo no Scholar",
+          "abstract": "Resumo do artigo quando disponível",
+          "artigo_completo": "URL do artigo completo quando encontrado"
+        }
+      ],
+      "qualitative_research_analysis": {
+        "contains_qualitative_research": true/false,  # Se encontrou conteúdo relacionado à pesquisa qualitativa
+        "is_qualitative_researcher": true/false,      # Se o pesquisador pode ser considerado da área qualitativa
+        "detailed_analysis": "Análise detalhada explicando os indicadores encontrados, metodologias qualitativas identificadas e justificativa para a classificação."
+      },
+      "veredict": "Veredicto resumido sobre a natureza qualitativa da pesquisa do autor."
+    }
+  agent: analista_artigos
+
