@@ -6,3 +6,4 @@ crewai-tools==0.37.0
 crawl4ai==0.5.0.post4
 playwright==1.50.0
 openai
+nest-asyncio>=1.5.8
